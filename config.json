@@ -1,0 +1,39 @@
+{
+  "appName": "SKSmartAI Browser",
+  "version": "1.0.0",
+  "theme": "light",
+  "defaultSearchEngines": {
+    "google": "https://www.google.com/search?q=",
+    "duckduckgo": "https://duckduckgo.com/?q=",
+    "bing": "https://www.bing.com/search?q=",
+    "youtube": "https://www.youtube.com/results?search_query=",
+    "wikipedia": "https://en.wikipedia.org/wiki/"
+  },
+  "bookmarks": [
+    {
+      "title": "GitHub",
+      "url": "https://github.com"
+    },
+    {
+      "title": "News",
+      "url": "https://news.google.com"
+    },
+    {
+      "title": "YouTube",
+      "url": "https://youtube.com"
+    }
+  ],
+  "modules": [
+    "assets/js/db.js",
+    "assets/js/security.js",
+    "assets/js/ai.js",
+    "assets/js/app.js",
+    "assets/js/admin.js",
+    "assets/js/sw-register.js"
+  ],
+  "admin": {
+    "safeMode": true,
+    "allowUpdates": true,
+    "remoteConfigUrl": "https://nk7094031-ui.github.io/SKSmartAI_Browser/config.json"
+  }
+}

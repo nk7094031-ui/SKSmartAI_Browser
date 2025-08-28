@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SKSmartAI Browser</title>
+<meta name="theme-color" content="#0b0f14">
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="assets/css/style.css">
+<script defer src="assets/js/db.js"></script>
+<script defer src="assets/js/security.js"></script>
+<script defer src="assets/js/ai.js"></script>
+<script defer src="assets/js/app.js"></script>
+<script defer src="assets/js/admin.js"></script>
+<script defer src="assets/js/sw-register.js"></script>
+</head>
+<body>
+<header class="top">
+  <div class="brand">⚡ SKSmartAI</div>
+  <div class="omnibox">
+    <input id="q" placeholder="Search or enter address…" autocomplete="off">
+    <select id="engine">
+      <option value="google">Google</option>
+      <option value="ddg">DuckDuckGo</option>
+      <option value="bing">Bing</option>
+      <option value="yt">YouTube</option>
+      <option value="wiki">Wikipedia</option>
+    </select>
+    <button id="go">Go</button>
+    <button id="aiBtn">AI</button>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button data-tab="home" class="active">Home</button>
+  <button data-tab="web">Web</button>
+  <button data-tab="blog">Blog</button>
+  <button data-tab="notes">Notes</button>
+  <button data-tab="apps">Apps</button>
+  <button data-tab="wallet">Wallet</button>
+  <button data-tab="builder">Builder</button>
+  <button data-tab="games">Games</button>
+  <button data-tab="admin">Admin</button>
+</nav>
+
+<main>
+  <!-- Home -->
+  <section id="tab-home" class="tab active">
+    <div class="cards">
+      <div class="card">
+        <h3>Welcome</h3>
+        <p>Lightweight, AI-assisted browser UI. Add to Home Screen to use offline (PWA).</p>
+        <p class="muted small">Legal note: This app does not include TOR/anonymity or DRM bypass.</p>
+      </div>
+      <div class="card">
+        <h3>Quick Search</h3>
+        <div class="quick">
+          <button data-q="news">News</button>
+          <button data-q="freelancing ideas">Freelancing</button>
+          <button data-q="how to start a blog">Blogging</button>
+          <button data-q="digital marketing tips">Marketing</button>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Bookmarks</h3>
+        <div id="bookmarks"></div>
+        <div class="row">
+          <input id="bm-title" placeholder="Title">
+          <input id="bm-url" placeholder="https://example.com">
+          <button id="bm-add">Add</button>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Web -->
+  <section id="tab-web" class="tab">
+    <div class="row">
+      <button id="back">←</button>
+      <button id="forward">→</button>
+      <button id="reload">⟳</button>
+      <span id="status" class="muted">Ready</span>
+    </div>
+    <iframe id="view" sandbox="allow-scripts allow-forms allow-same-origin allow-popups" src="about:blank"></iframe>
+  </section>
+
+  <!-- Blog -->
+  <section id="tab-blog" class="tab">
+    <div class="row">
+      <input id="blog-title" placeholder="Blog title">
+      <button id="blog-save">Save</button>
+      <button id="blog-export">Export .md</button>
+      <button id="blog-clear">Clear</button>
+    </div>
+    <textarea id="blog-editor" placeholder="Write your blog here (Markdown supported)…"></textarea>
+    <div class="muted small">Saved locally on this device. Export to back up.</div>
+  </section>
+
+  <!-- Notes -->
+  <section id="tab-notes" class="tab">
+    <div class="row">
+      <input id="note-title" placeholder="Note title">
+      <button id="note-add">Add Note</button>
+    </div>
+    <textarea id="note-area" placeholder="Quick note…"></textarea>
+    <div id="note-list"></div>
+  </section>
+
+  <!-- Apps -->
+  <section id="tab-apps" class="tab">
+    <div class="row">
+      <input id="app-title" placeholder="App name">
+      <input id="app-url" placeholder="https://">
+      <button id="app-add">Add App</button>
+    </div>
+    <div id="app-grid" class="grid"></div>
+    <div class="muted small">Create tiles for websites/social (Opera-style speed dial).</div>
+  </section>
+
+  <!-- Wallet (demo, non-custodial placeholder) -->
+  <section id="tab-wallet" class="tab">
+    <div class="card">
+      <h3>Wallet (Demo)</h3>
+      <p class="muted small">This is a **demo UI** only. No keys generated/saved. Do not store real funds.</p>
+      <div class="row">
+        <input id="wal-label" placeholder="Label (e.g., My Test Wallet)">
+        <input id="wal-addr" placeholder="Paste public address (test)">
+        <button id="wal-add">Add</button>
+      </div>
+      <div id="wal-list"></div>
+    </div>
+  </section>
+
+  <!-- Builder (AI Web/App Builder lite) -->
+  <section id="tab-builder" class="tab">
+    <div class="card">
+      <h3>Web Builder (Template)</h3>
+      <p class="muted small">Fill the form → Export a simple static site (HTML). Host on GitHub Pages/Netlify (free).</p>
+      <div class="row"><input id="wb-title" placeholder="Site Title"></div>
+      <div class="row"><input id="wb-heading" placeholder="Hero Heading"></div>
+      <textarea id="wb-body" placeholder="Write your content…"></textarea>
+      <button id="wb-preview">Preview</button>
+      <button id="wb-export">Export HTML</button>
+      <iframe id="wb-view" sandbox="allow-scripts allow-same-origin" style="width:100%;height:280px;border:1px solid #1a2634;border-radius:8px"></iframe>
+    </div>
+    
+    <div class="card">
+      <h3>App Builder (Config)</h3>
+      <p class="muted small">Define app tiles as JSON. Export config for reuse.</p>
+      <textarea id="ab-json" placeholder='[{"title":"YouTube","url":"https://youtube.com"}]'></textarea>
+      <button id="ab-load">Load</button>
+      <button id="ab-export">Export JSON</button>
+    </div>
+  </section>
+
+  <!-- Games -->
+  <section id="tab-games" class="tab">
+    <div class="grid">
+      <a class="tile" href="assets/games/tictactoe.html" target="_blank">TicTacToe (Offline)</a>
+    </div>
+  </section>
+
+  <!-- Admin -->
+  <section id="tab-admin" class="tab">
+    <div id="admin-locked">
+      <input id="admin-pin" placeholder="Enter Admin PIN (default 0000)">
+      <button id="admin-unlock">Unlock</button>
+    </div>
+    <div id="admin-panel" class="hide">
+      <div class="cards">
+        <div class="card">
+          <h3>Admin Notebook</h3>
+          <textarea id="admin-notes" placeholder="Private notes…"></textarea>
+          <button id="admin-save">Save</button>
+          <button id="admin-backup">Export Backup</button>
+          <input id="admin-restore" type="file" accept="application/json">
+        </div>
+        <div class="card">
+          <h3>AI Settings</h3>
+          <input id="ai-endpoint" placeholder="https://your-free-backend/ai">
+          <button id="ai-test">Test</button>
+          <pre id="ai-log" class="pre"></pre>
+          <p class="muted small">Default free fallback: DuckDuckGo Instant Answer (no key).</p>
+        </div>
+        <div class="card">
+          <h3>Remote Update (Free)</h3>
+          <p class="muted small">Set a JSON config URL (e.g., GitHub Pages raw JSON). App will pull & apply UI updates.</p>
+          <input id="cfg-url" placeholder="https://username.github.io/repo/config.json">
+          <button id="cfg-apply">Apply</button>
+          <pre id="cfg-log" class="pre"></pre>
+        </div>
+        <div class="card">
+          <h3>Safety</h3>
+          <p class="muted small">Content filter (basic): blocks adult/illegal keywords. Disable at your own risk.</p>
+          <label><input type="checkbox" id="safe-toggle"> Enable Safe Mode</label>
+        </div>
+        <div class="card">
+          <h3>Legal & Earning</h3>
+          <a class="tile" href="assets/pages/earning.html" target="_blank">Legal earning ideas</a>
+          <a class="tile" href="assets/pages/legal.html" target="_blank">Legal / Safety</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="bottom">
+  <span>© SKSmartAI</span>
+  <a href="assets/pages/help.html" target="_blank">Help</a>
+  <a href="assets/pages/privacy.html" target="_blank">Privacy</a>
+</footer>
+script src="script.js"></script>
+</body>
+</html>
